@@ -234,3 +234,77 @@ class TestConduit(object):
         second_page_hex_color = Color.from_string(second_page_get_color).hex
         assert second_page.get_attribute('class') == 'page-item active'
         assert second_page_hex_color == '#5cb85c'
+
+    # test delete article
+    def test_delete_article(self):
+        # run login function
+        login(self)
+        # navigate to my own profile
+        self.browser.get(registered['user_profile_link'])
+        # find the article we want to delete
+        # article_title = WebDriverWait(self.browser, 3).until(
+        #     EC.presence_of_element_located((By.XPATH, 'h1[text()="Just another clickbait article"]')))
+        article_title = self.browser.find_element_by_xpath('h1[text()="Just another clickbait article"]')
+        time.sleep(2)
+        # click on article
+        article_title.click()
+        time.sleep(2)
+        # assert delete button displayed
+        delete_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-outline-danger btn-sm"]')
+        assert delete_btn.is_displayed()
+        delete_btn.click()
+        time.sleep(2)
+        delete_msg = self.browser.find_element_by_xpath('//div[text()="Deleted the article. Going home..."]')
+        assert delete_msg.is_displayed()
+        assert self.browser.current_url == 'http://localhost:1667/#/'
+
+    # test write comment function
+    def test_write_comment(self):
+        # run login function
+        login(self)
+        # find the first article from main page
+        first_article = self.browser.find_element_by_xpath('//div[@class="article-preview"][1]')
+        # click on article
+        first_article.click()
+        time.sleep(1)
+        # assert comment form is displayed
+        comment_form = self.browser.find_element_by_xpath('//form[@class="card comment-form"]')
+        assert comment_form.is_displayed()
+        # assert we can write a comment
+        comment_textarea = self.browser.find_element_by_xpath('//textarea[@placeholder="Write a comment..."]')
+        assert comment_textarea.is_enabled()
+        # writing comment
+        comment_textarea.send_keys('This is a simple comment.')
+        # post button
+        send_btn = self.browser.find_element_by_xpath(
+            '//button[@class="btn btn-sm btn-primary"][text()="Post Comment"]')
+        # click post button
+        send_btn.click()
+        time.sleep(1)
+        # find the fresh comment
+        comment_sent = self.browser.find_element_by_xpath('//p[text()="This is a simple comment."]')
+        # find the author of the fresh comment
+        comment_author = self.browser.find_element_by_xpath('//a[@class="comment-author"][2]')
+        # assert the fresh comment is appeared
+        assert comment_sent.is_displayed()
+        # assert we wrote the fresh comment
+        assert registered['username'] in comment_author.text
+    # end of test write comment function
+
+    # test logout function
+    def test_logout(self):
+        # find navbar
+        navbar = self.browser.find_element_by_xpath('//nav')
+        # assert there is no logout button (text) on navbar
+        assert 'Log out' not in navbar.text
+        # run login function
+        login(self)
+        # assert Logout button displayed
+        assert 'Log out' in navbar.text
+        # find logout button
+        log_out_link = self.browser.find_element_by_xpath('//a[contains(text(), "Log out")]')
+        # click on logout button
+        log_out_link.click()
+        # assert there is no logout button (text) on navbar after logout
+        assert 'Log out' not in navbar.text
+    # end of test logout function
