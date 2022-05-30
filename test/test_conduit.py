@@ -156,6 +156,74 @@ class TestConduit(object):
 
     # end of test write new article
 
+    # test edit/modify article
+    def test_modify_article(self):
+        # run login function
+        login(self)
+        # navigate to my own profile
+        self.browser.get(registered['user_profile_link'])
+        time.sleep(1)
+        # find the article we want to modify
+        # article_title = WebDriverWait(self.browser, 2).until(
+        #     EC.presence_of_element_located((By.XPATH, 'h1[text()="Just another clickbait article"]')))
+        article_title = self.browser.find_element_by_xpath('//h1[text()="Just another clickbait article"]')
+        # click on article
+        article_title.click()
+        time.sleep(1)
+        edit_btn = self.browser.find_element_by_xpath('//a[@href="#/editor/just-another-clickbait-article"]')
+        edit_btn.click()
+        time.sleep(1)
+        body_input = self.browser.find_element_by_xpath(
+            '//textarea[@placeholder="Write your article (in markdown)"]')
+        body_input.clear()
+        new_article_body = 'I just modified this article. It\'s not about clickbait anymore.'
+        body_input.send_keys(new_article_body)
+        tags_input = self.browser.find_element_by_xpath('//input[@class="ti-new-tag-input ti-valid"]')
+        tags_input.send_keys(Keys.BACKSPACE)
+        tags_input.send_keys(Keys.BACKSPACE)
+        editor_tags = []
+        tags_in_editor = self.browser.find_elements_by_xpath('//li[@class="ti-tag ti-valid"]')
+        for tag in tags_in_editor:
+            editor_tags.append(tag.text)
+        submit_btn = self.browser.find_element_by_xpath('//button[@type="submit"]')
+        submit_btn.click()
+        time.sleep(1)
+        tag_list = []
+        tags = self.browser.find_elements_by_xpath('//a[@class="tag-pill tag-default"]')
+        # collect tags into a list
+        for tag in tags:
+            tag_list.append(tag.text)
+        article_body_text = self.browser.find_element_by_xpath('//div[@class="row article-content"]/div/div[1]/p')
+        assert article_body_text.text == new_article_body
+        assert editor_tags == tag_list
+
+    # end of test edit/modify article
+
+    # test delete article
+    def test_delete_article(self):
+        # run login function
+        login(self)
+        # navigate to my own profile
+        self.browser.get(registered['user_profile_link'])
+        # find the article we want to delete
+        # article_title = WebDriverWait(self.browser, 3).until(
+        #     EC.presence_of_element_located((By.XPATH, 'h1[text()="Just another clickbait article"]')))
+        article_title = self.browser.find_element_by_xpath('h1[text()="Just another clickbait article"]')
+        time.sleep(2)
+        # click on article
+        article_title.click()
+        time.sleep(1)
+        # assert delete button displayed
+        delete_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-outline-danger btn-sm"]')
+        assert delete_btn.is_displayed()
+        delete_btn.click()
+        # time.sleep(1)
+        # delete_msg = self.browser.find_element_by_xpath('//div[text()="Deleted the article. Going home..."]')
+        # assert delete_msg.is_displayed()
+        assert self.browser.current_url == 'http://localhost:1667/#/'
+
+    # end of test delete article
+
     # test collect data from a user's profile
     def test_collect_data(self):
         # run login function
@@ -214,6 +282,7 @@ class TestConduit(object):
 
     # end of create list
 
+    # test paginator (go to next page)
     def test_next_page(self):
         # run login function
         login(self)
@@ -221,6 +290,8 @@ class TestConduit(object):
         first_page = self.browser.find_element_by_xpath('//li[@data-test="page-link-1"]')
         second_page = self.browser.find_element_by_xpath('//li[@data-test="page-link-2"]')
         second_page_link = self.browser.find_element_by_xpath('//li[@data-test="page-link-2"]/a')
+        # second_page_color = second_page_link.get_attribute("background-color")  # nem működik
+        # print(second_page_color)
         # scroll at the bottom of the page
         page_html = self.browser.find_element_by_xpath('//html')
         page_html.send_keys(Keys.END)
@@ -235,28 +306,7 @@ class TestConduit(object):
         assert second_page.get_attribute('class') == 'page-item active'
         assert second_page_hex_color == '#5cb85c'
 
-    # test delete article
-    def test_delete_article(self):
-        # run login function
-        login(self)
-        # navigate to my own profile
-        self.browser.get(registered['user_profile_link'])
-        # find the article we want to delete
-        # article_title = WebDriverWait(self.browser, 3).until(
-        #     EC.presence_of_element_located((By.XPATH, 'h1[text()="Just another clickbait article"]')))
-        article_title = self.browser.find_element_by_xpath('h1[text()="Just another clickbait article"]')
-        time.sleep(2)
-        # click on article
-        article_title.click()
-        time.sleep(2)
-        # assert delete button displayed
-        delete_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-outline-danger btn-sm"]')
-        assert delete_btn.is_displayed()
-        delete_btn.click()
-        time.sleep(2)
-        delete_msg = self.browser.find_element_by_xpath('//div[text()="Deleted the article. Going home..."]')
-        assert delete_msg.is_displayed()
-        assert self.browser.current_url == 'http://localhost:1667/#/'
+    # end of test paginator
 
     # test write comment function
     def test_write_comment(self):
@@ -289,6 +339,7 @@ class TestConduit(object):
         assert comment_sent.is_displayed()
         # assert we wrote the fresh comment
         assert registered['username'] in comment_author.text
+
     # end of test write comment function
 
     # test logout function
