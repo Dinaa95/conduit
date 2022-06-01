@@ -79,10 +79,11 @@ class TestConduit(object):
         # send data
         sign_up_btn.click()
         # wait for error message
-        error = WebDriverWait(self.browser, 5).until(
-            EC.presence_of_element_located((By.XPATH, '//div[text()="Email already taken. "]')))
+        error_msg = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
+        # error = WebDriverWait(self.browser, 5).until(
+        #     EC.presence_of_element_located((By.XPATH, '//div[text()="Email already taken. "]')))
         # assert error message displayed
-        assert error.is_displayed()
+        assert error_msg.is_displayed()
 
     # end of test registration
 
