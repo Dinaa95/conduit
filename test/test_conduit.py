@@ -80,9 +80,9 @@ class TestConduit(object):
         sign_up_btn.click()
         # wait for error message
         time.sleep(1)
-        error = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
+        error_msg = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
         # assert error message displayed
-        assert error.is_displayed()
+        assert error_msg.is_displayed()
 
     # end of test registration
 
