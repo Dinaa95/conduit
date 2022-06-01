@@ -211,7 +211,7 @@ class TestConduit(object):
         self.browser.get(registered['user_profile_link'])
         time.sleep(1)
         # find the article we want to delete
-        article_title = self.browser.find_element_by_xpath('h1[text()="Just another clickbait article"]')
+        article_title = self.browser.find_element_by_xpath('//h1[text()="Just another clickbait article"]')
         # click on article
         article_title.click()
         print('Success!')
