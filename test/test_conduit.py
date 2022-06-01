@@ -16,11 +16,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.color import Color
 # data for login and registration
 from login_data import registered
+# ize
+from selenium.webdriver.chrome.options import Options
 
 
 class TestConduit(object):
     def setup(self):
-        self.browser = webdriver.Chrome(ChromeDriverManager().install())
+        browser_options = Options()
+        browser_options.headless = True
+        self.browser = webdriver.Chrome(ChromeDriverManager().install(), options=browser_options)
         URL = "http://localhost:1667/"
         self.browser.get(URL)
 
