@@ -79,7 +79,7 @@ class TestConduit(object):
         # send data
         sign_up_btn.click()
         # wait for error message
-        error = WebDriverWait(self.browser, 3).until(
+        error = WebDriverWait(self.browser, 5).until(
             EC.presence_of_element_located((By.XPATH, '//div[text()="Email already taken. "]')))
         # assert error message displayed
         assert error.is_displayed()
@@ -220,7 +220,7 @@ class TestConduit(object):
         delete_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-outline-danger btn-sm"]')
         assert delete_btn.is_displayed()
         delete_btn.click()
-        time.sleep(1)
+        time.sleep(4)
         assert self.browser.current_url == 'http://localhost:1667/#/'
 
     # end of test delete article
