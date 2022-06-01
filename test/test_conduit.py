@@ -214,7 +214,7 @@ class TestConduit(object):
         article_title = self.browser.find_element_by_xpath('h1[text()="Just another clickbait article"]')
         # click on article
         article_title.click()
-        print('Success')
+        print('Success!')
         time.sleep(1)
         # assert delete button displayed
         delete_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-outline-danger btn-sm"]')
