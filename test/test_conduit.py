@@ -79,10 +79,8 @@ class TestConduit(object):
         # send data
         sign_up_btn.click()
         # wait for error message
-        time.sleep(2)
+        time.sleep(1)
         error = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
-        # error = WebDriverWait(self.browser, 3).until(
-            # EC.presence_of_element_located((By.XPATH, '//div[text()="Email already taken. "]')))
         # assert error message displayed
         assert error.is_displayed()
 
@@ -209,13 +207,11 @@ class TestConduit(object):
     def test_delete_article(self):
         # run login function
         login(self)
+        time.sleep(1)
         # navigate to my own profile
         self.browser.get(registered['user_profile_link'])
         # find the article we want to delete
-        # article_title = WebDriverWait(self.browser, 3).until(
-        #     EC.presence_of_element_located((By.XPATH, 'h1[text()="Just another clickbait article"]')))
         article_title = self.browser.find_element_by_xpath('h1[text()="Just another clickbait article"]')
-        time.sleep(2)
         # click on article
         article_title.click()
         time.sleep(1)
@@ -239,7 +235,7 @@ class TestConduit(object):
         self.browser.get(user_profile_link)
         time.sleep(1)
         # find elements
-        profile_pic_link = self.browser.find_element_by_xpath('//img[@class="user-img"]').get_attribute('src')
+        profile_pic_link = self.browser.find_element_by_xpath('//img[@class="user-img"]')
         user_name = self.browser.find_element_by_xpath('//div[@class="profile-page"]/div[1]/div/div/div/h4')
         user_bio = self.browser.find_element_by_xpath('//div[@class="profile-page"]/div[1]/div/div/div/p')
         user_article_titles = self.browser.find_elements_by_xpath('//h1')
@@ -248,7 +244,7 @@ class TestConduit(object):
             # username
             data_collection.write('Current user\'s name: \n' + user_name.text + '\n')
             # picture link
-            data_collection.write('Profile picture link: \n' + profile_pic_link + '\n')
+            data_collection.write('Profile picture link: \n' + profile_pic_link.get_attribute('src') + '\n')
             # bio
             data_collection.write('About: \n' + user_bio.text + '\n')
             # articles
