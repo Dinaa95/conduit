@@ -207,9 +207,9 @@ class TestConduit(object):
     def test_delete_article(self):
         # run login function
         login(self)
-        time.sleep(4)
         # navigate to my own profile
         self.browser.get(registered['user_profile_link'])
+        time.sleep(1)
         # find the article we want to delete
         article_title = self.browser.find_element_by_xpath('h1[text()="Just another clickbait article"]')
         # click on article
@@ -256,7 +256,7 @@ class TestConduit(object):
             collection_content = data_collection.readlines()
         # assert article parts equal to the lines
         assert user_name.text == collection_content[1].rstrip()
-        assert profile_pic_link == collection_content[3].rstrip()
+        assert str(profile_pic_link) == collection_content[3].rstrip()
         assert user_bio.text == collection_content[5].rstrip()
         assert '- ' + user_article_titles[0].text == collection_content[7].rstrip()
 
