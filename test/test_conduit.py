@@ -78,10 +78,12 @@ class TestConduit(object):
         password_input.send_keys(registered['password'])
         # send data
         sign_up_btn.click()
+        time.sleep(2)
         # wait for error message
-        error_msg = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
+        error_msg = self.browser.find_element_by_xpath('//div[@class="swal-text"]')
+        # error_msg = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
         # assert error message displayed
-        assert error_msg.is_displayed()
+        assert error_msg.text == 'Email already taken.'
 
     # end of test registration
 
