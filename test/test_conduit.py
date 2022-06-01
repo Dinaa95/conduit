@@ -79,7 +79,7 @@ class TestConduit(object):
         # send data
         sign_up_btn.click()
         # wait for error message
-        time.sleep(4)
+        time.sleep(1)
         error = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
         # assert error message displayed
         assert error.is_displayed()
@@ -214,6 +214,7 @@ class TestConduit(object):
         article_title = self.browser.find_element_by_xpath('h1[text()="Just another clickbait article"]')
         # click on article
         article_title.click()
+        print('Success')
         time.sleep(1)
         # assert delete button displayed
         delete_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-outline-danger btn-sm"]')
