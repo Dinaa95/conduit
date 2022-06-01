@@ -1,3 +1,4 @@
-
 pytest
-allure-pytest==2.8.40
+allure-pytest
+selenium==3.141.0
+webdriver-manager
