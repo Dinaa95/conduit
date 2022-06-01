@@ -78,10 +78,9 @@ class TestConduit(object):
         password_input.send_keys(registered['password'])
         # send data
         sign_up_btn.click()
+        time.sleep(2)
         # wait for error message
         error_msg = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
-        # error = WebDriverWait(self.browser, 5).until(
-        #     EC.presence_of_element_located((By.XPATH, '//div[text()="Email already taken. "]')))
         # assert error message displayed
         assert error_msg.is_displayed()
 
