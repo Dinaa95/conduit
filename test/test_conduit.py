@@ -67,7 +67,7 @@ class TestConduit(object):
         # register if it's not already registered
         try:
             registration(self)
-            time.sleep(1)
+            time.sleep(4)
             success_msg = self.browser.find_element_by_xpath('//div[text()="Your registration was successful!"]')
             assert success_msg.is_displayed()
         except NoSuchElementException:
