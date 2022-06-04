@@ -2,6 +2,8 @@
 from selenium import webdriver
 # webdriver-manager
 from webdriver_manager.chrome import ChromeDriverManager
+# NoSuchElementException for try-except
+from selenium.common.exceptions import NoSuchElementException
 # webdriver wait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -10,6 +12,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 import time
 # login function
 from login_function import login
+# register function
+from registration_function import registration
 # keyboard keys
 from selenium.webdriver.common.keys import Keys
 # built-in colors
@@ -60,30 +64,40 @@ class TestConduit(object):
 
     # test registration
     def test_registration(self):
-        # navigate to register page
-        main_register_btn = self.browser.find_element_by_xpath('//a[@href="#/register"]')
-        main_register_btn.click()
-        # find elements
-        username_input = self.browser.find_element_by_xpath('//input[@placeholder="Username"]')
-        email_input = self.browser.find_element_by_xpath('//input[@placeholder="Email"]')
-        password_input = self.browser.find_element_by_xpath('//input[@type="password"]')
-        sign_up_btn = self.browser.find_element_by_xpath('//button[contains(text(), "Sign up")]')
-        # asserts: the inputs are available
-        assert username_input.is_enabled()
-        assert email_input.is_enabled()
-        assert password_input.is_enabled()
-        # fill inputs with data (from login_data)
-        username_input.send_keys(registered['username'])
-        email_input.send_keys(registered['email'])
-        password_input.send_keys(registered['password'])
-        # send data
-        sign_up_btn.click()
-        time.sleep(1)
-        # wait for error message
-        error_msg = self.browser.find_element_by_xpath('//div[@class="swal-modal"]/div[@class="swal-text"]')
-        # error_msg = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
-        # assert error message displayed
-        assert error_msg.text == 'Email already taken. '
+        # register if it's not already registered
+        try:
+            registration(self)
+            time.sleep(1)
+            success_msg = self.browser.find_element_by_xpath('//div[text()="Your registration was successful!"]')
+            assert success_msg.is_displayed()
+        except NoSuchElementException:
+            # click OK
+            ok_btn = self.browser.find_element_by_xpath('//button[@class="swal-button swal-button--confirm"]')
+            ok_btn.click()
+            # navigate to register page
+            main_register_btn = self.browser.find_element_by_xpath('//a[@href="#/register"]')
+            main_register_btn.click()
+            # find elements
+            username_input = self.browser.find_element_by_xpath('//input[@placeholder="Username"]')
+            email_input = self.browser.find_element_by_xpath('//input[@placeholder="Email"]')
+            password_input = self.browser.find_element_by_xpath('//input[@type="password"]')
+            sign_up_btn = self.browser.find_element_by_xpath('//button[contains(text(), "Sign up")]')
+            # asserts: the inputs are available
+            assert username_input.is_enabled()
+            assert email_input.is_enabled()
+            assert password_input.is_enabled()
+            # fill inputs with data (from login_data)
+            username_input.send_keys(registered['username'])
+            email_input.send_keys(registered['email'])
+            password_input.send_keys(registered['password'])
+            # send data
+            sign_up_btn.click()
+            time.sleep(3)
+            # wait for error message
+            error_msg = self.browser.find_element_by_xpath('//div[@class="swal-modal"]/div[@class="swal-text"]')
+            # error_msg = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
+            # assert error message displayed
+            assert error_msg.text == 'Email already taken.'
 
     # end of test registration
 
