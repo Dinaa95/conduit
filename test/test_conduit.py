@@ -1,26 +1,15 @@
-# selenium
 from selenium import webdriver
-# webdriver-manager
 from webdriver_manager.chrome import ChromeDriverManager
-# NoSuchElementException for try-except
 from selenium.common.exceptions import NoSuchElementException
-# webdriver wait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-# time for time.sleep
 import time
-# login function
 from login_function import login
-# register function
 from registration_function import registration
-# keyboard keys
 from selenium.webdriver.common.keys import Keys
-# built-in colors
 from selenium.webdriver.support.color import Color
-# data for login and registration
 from login_data import registered
-# Chrome options for install
 from selenium.webdriver.chrome.options import Options
 
 
@@ -95,7 +84,6 @@ class TestConduit(object):
             time.sleep(3)
             # wait for error message
             error_msg = self.browser.find_element_by_xpath('//div[@class="swal-modal"]/div[@class="swal-text"]')
-            # error_msg = self.browser.find_element_by_xpath('//div[text()="Email already taken. "]')
             # assert error message displayed
             assert error_msg.text == 'Email already taken.'
 
@@ -183,8 +171,6 @@ class TestConduit(object):
         self.browser.get(registered['user_profile_link'])
         time.sleep(1)
         # find the article we want to modify
-        # article_title = WebDriverWait(self.browser, 2).until(
-        #     EC.presence_of_element_located((By.XPATH, 'h1[text()="Just another clickbait article"]')))
         article_title = self.browser.find_element_by_xpath('//h1[text()="Just another clickbait article"]')
         # click on article
         article_title.click()
@@ -229,7 +215,6 @@ class TestConduit(object):
         article_title = self.browser.find_element_by_xpath('//h1[text()="Just another clickbait article"]')
         # click on article
         article_title.click()
-        print('Success!')
         time.sleep(1)
         # assert delete button displayed
         delete_btn = self.browser.find_element_by_xpath('//button[@class="btn btn-outline-danger btn-sm"]')
@@ -292,7 +277,6 @@ class TestConduit(object):
             # exception: conduit logo is not a title
             if title.text != conduit_main_text.text:
                 article_title_list.append(title.text)
-        print(article_title_list)
         # assert both list contains the same number of elements (-1 because of 'conduit')
         assert len(main_article_title) - 1 == len(article_title_list)
 
@@ -306,8 +290,6 @@ class TestConduit(object):
         first_page = self.browser.find_element_by_xpath('//li[@data-test="page-link-1"]')
         second_page = self.browser.find_element_by_xpath('//li[@data-test="page-link-2"]')
         second_page_link = self.browser.find_element_by_xpath('//li[@data-test="page-link-2"]/a')
-        # second_page_color = second_page_link.get_attribute("background-color")  # nem működik
-        # print(second_page_color)
         # scroll at the bottom of the page
         page_html = self.browser.find_element_by_xpath('//html')
         page_html.send_keys(Keys.END)
