@@ -11,6 +11,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.color import Color
 from login_data import registered
 from selenium.webdriver.chrome.options import Options
+import csv
 
 
 class TestConduit(object):
@@ -38,7 +39,7 @@ class TestConduit(object):
         accept_cookie_btn.click()
         # wait until cookie panel disappear
         WebDriverWait(self.browser, 2).until_not(EC.presence_of_element_located((By.ID, 'cookie-policy-panel')))
-        # try to find cookie panel again
+        # try to find cookie panel again (because of len assert)
         cookie_panel = self.browser.find_elements_by_id('cookie-policy-panel')
         # assert "cookie panel list" len is 0
         assert len(cookie_panel) == 0
@@ -306,7 +307,7 @@ class TestConduit(object):
 
     # end of test paginator
 
-    # test write comment function
+    # test write comments constantly
     def test_write_comment(self):
         # run login function
         login(self)
@@ -321,24 +322,28 @@ class TestConduit(object):
         # assert we can write a comment
         comment_textarea = self.browser.find_element_by_xpath('//textarea[@placeholder="Write a comment..."]')
         assert comment_textarea.is_enabled()
-        # writing comment
-        comment_textarea.send_keys('This is a simple comment.')
-        # post button
+        # find post comment button
         send_btn = self.browser.find_element_by_xpath(
             '//button[@class="btn btn-sm btn-primary"][text()="Post Comment"]')
-        # click post button
-        send_btn.click()
-        time.sleep(1)
-        # find the fresh comment
-        comment_sent = self.browser.find_element_by_xpath('//p[text()="This is a simple comment."]')
-        # find the author of the fresh comment
-        comment_author = self.browser.find_element_by_xpath('//a[@class="comment-author"][2]')
-        # assert the fresh comment is appeared
-        assert comment_sent.is_displayed()
-        # assert we wrote the fresh comment
-        assert registered['username'] in comment_author.text
+        # writing comments from csv file
+        with open('test/comments.csv', 'r', encoding='UTF-8') as comments:
+            comment_table = csv.reader(comments)
+            for row in comment_table:
+                comment_textarea.send_keys(row)
+                send_btn.click()
+                time.sleep(1)
+        # find comments for assert and create a list
+        written_comments = self.browser.find_elements_by_xpath('//p[@class="card-text"]')
+        written_comment_list = []
+        for comment in written_comments:
+            written_comment_list.append(comment.text)
+        # open csv again and assert if the rows are on the list
+        with open('test/comments.csv', 'r', encoding='UTF-8') as comments:
+            comment_table = csv.reader(comments)
+            for row in comment_table:
+                assert row[0] in written_comment_list
 
-    # end of test write comment function
+    # end of test write comments constantly
 
     # test logout function
     def test_logout(self):
