@@ -239,7 +239,7 @@ class TestConduit(object):
         user_bio = self.browser.find_element_by_xpath('//div[@class="profile-page"]/div[1]/div/div/div/p')
         user_article_titles = self.browser.find_elements_by_xpath('//h1')
         # open a file, collect data and fill the file with them
-        with open('collected_data.txt', 'w', encoding='UTF-8') as data_collection:
+        with open('test/collected_data.txt', 'w', encoding='UTF-8') as data_collection:
             # username
             data_collection.write('Current user\'s name: \n' + user_name.text + '\n')
             # picture link
@@ -252,7 +252,7 @@ class TestConduit(object):
             for title in user_article_titles:
                 data_collection.write('- ' + title.text + '\n')
         # open (read only) the created file
-        with open('collected_data.txt', 'r', encoding='UTF-8') as data_collection:
+        with open('test/collected_data.txt', 'r', encoding='UTF-8') as data_collection:
             # read line-by-line
             collection_content = data_collection.readlines()
         # assert article parts equal to the lines
