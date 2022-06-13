@@ -231,16 +231,15 @@ class TestConduit(object):
         # run login function
         login(self)
         # navigate to the specific user's profile
-        user_profile_link = 'http://localhost:1667/#/@thetester/'
-        self.browser.get(user_profile_link)
+        self.browser.get(registered['user_profile_link'])
         time.sleep(1)
         # find elements
         profile_pic_link = self.browser.find_element_by_xpath('//img[@class="user-img"]').get_attribute('src')
         user_name = self.browser.find_element_by_xpath('//div[@class="profile-page"]/div[1]/div/div/div/h4')
         user_bio = self.browser.find_element_by_xpath('//div[@class="profile-page"]/div[1]/div/div/div/p')
         user_article_titles = self.browser.find_elements_by_xpath('//h1')
-        # open or create a file, collect data and fill the file with them
-        with open('test/collected_data.txt', 'a', encoding='UTF-8') as data_collection:
+        # open a file, collect data and fill the file with them
+        with open('collected_data.txt', 'w', encoding='UTF-8') as data_collection:
             # username
             data_collection.write('Current user\'s name: \n' + user_name.text + '\n')
             # picture link
@@ -253,7 +252,7 @@ class TestConduit(object):
             for title in user_article_titles:
                 data_collection.write('- ' + title.text + '\n')
         # open (read only) the created file
-        with open('test/collected_data.txt', 'r', encoding='UTF-8') as data_collection:
+        with open('collected_data.txt', 'r', encoding='UTF-8') as data_collection:
             # read line-by-line
             collection_content = data_collection.readlines()
         # assert article parts equal to the lines
