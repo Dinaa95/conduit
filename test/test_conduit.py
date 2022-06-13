@@ -287,23 +287,19 @@ class TestConduit(object):
     def test_next_page(self):
         # run login function
         login(self)
-        # find elements
-        first_page = self.browser.find_element_by_xpath('//li[@data-test="page-link-1"]')
-        second_page = self.browser.find_element_by_xpath('//li[@data-test="page-link-2"]')
-        second_page_link = self.browser.find_element_by_xpath('//li[@data-test="page-link-2"]/a')
         # scroll at the bottom of the page
         page_html = self.browser.find_element_by_xpath('//html')
         page_html.send_keys(Keys.END)
-        # assert #1 page is the active page
-        assert first_page.get_attribute('class') == 'page-item active'
-        time.sleep(1)
-        # click on page #2
-        second_page_link.click()
-        # assert #2 page is the active page, and get the right background color
-        second_page_get_color = second_page_link.value_of_css_property('background-color')
-        second_page_hex_color = Color.from_string(second_page_get_color).hex
-        assert second_page.get_attribute('class') == 'page-item active'
-        assert second_page_hex_color == '#5cb85c'
+        # find pages
+        all_pages_links = self.browser.find_elements_by_xpath('//a[@class="page-link"]')
+        # click on all pages
+        for page in all_pages_links:
+            page.click()
+            # save the color of the button
+            color = page.value_of_css_property('background-color')
+            hex_color = Color.from_string(color).hex
+            # assert the color is green (#5cb85c), so the clicked page is active
+            assert hex_color == '#5cb85c'
 
     # end of test paginator
 
@@ -362,3 +358,4 @@ class TestConduit(object):
         # assert there is no logout button (text) on navbar after logout
         assert 'Log out' not in navbar.text
     # end of test logout function
+
